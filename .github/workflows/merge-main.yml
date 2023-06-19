@@ -21,7 +21,7 @@ jobs:
       - name: Run flutter pub get
         run: flutter pub get
       - name: Build Web App
-        run: flutter build web --release
+        run: flutter build web --release --base-href /tap-me-button-demo/
       - name: Deploy to GitHub Pages
         run: |
           cd build/web
