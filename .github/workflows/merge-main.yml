@@ -1,0 +1,36 @@
+name: Deploy to GitHub Pages on merge
+'on':
+  push:
+    branches:
+      - main
+
+env:
+  flutter_version: "3.10.1"
+  flutter_channel: "stable"
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v1
+        with:
+          flutter-version: ${{ env.flutter_version }}
+          channel: ${{ env.flutter_channel }}
+      - name: Run flutter pub get
+        run: flutter pub get
+      - name: Build Web App
+        run: flutter build web --release
+      - name: Deploy to GitHub Pages
+        run: |
+          cd build/web
+          git init
+          git config --global user.email henriquefelixdev@gmail.com
+          git config --global user.name henriquefelixdev
+          git status
+          git remote add origin https://${{secrets.token}}@github.com/HenriqueFelixDev/tap-me-button-demo.git
+          git checkout -b gh-pages
+          git add --all
+          git commit -m "update"
+          git push origin gh-pages -f
